@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import useMedia from 'use-media';
 
 import LOGO from '../../assets/images/header_logo.png';
+import { paths } from '../../constants/paths';
 
 const StyledHeader = styled.div`
   display: flex;
@@ -26,17 +28,25 @@ const LeftIcon = styled.p`
   left: 10px;
 `;
 
+const Back = styled(Link)`
+  font-size: 1em;
+  color: ${({ theme }) => theme.color.white};
+  position: absolute;
+  left: 10px;
+`;
 interface IHeaderProps {
+  hasBack: boolean;
+  hasMenu: boolean;
   handleMenu: any;
 }
 
-const Header: React.FC<IHeaderProps> = ({ handleMenu }) => {
+const Header: React.FC<IHeaderProps> = ({ hasBack, hasMenu, handleMenu }) => {
   const isMobile = useMedia({ maxWidth: 768 });
   const [isMenu, setIsMenu] = useState(true);
 
   return (
     <StyledHeader>
-      {isMobile && (
+      {hasMenu && isMobile && (
         <LeftIcon
           onClick={() => {
             setIsMenu(!isMenu);
@@ -46,6 +56,7 @@ const Header: React.FC<IHeaderProps> = ({ handleMenu }) => {
           {isMenu ? '☰' : '✖'}
         </LeftIcon>
       )}
+      {hasBack && <Back to={paths.main}>{isMobile ? '◄' : '◄ Back'}</Back>}
       <img src={LOGO} alt="Header Logo" />
     </StyledHeader>
   );

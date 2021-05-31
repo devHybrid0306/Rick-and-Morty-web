@@ -1,13 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Button = styled.button`
+interface IButtonProps {
+  isClicked: boolean;
+}
+
+const Button = styled.button<IButtonProps>`
   width: auto;
-  background-color: ${({ theme }) => theme.color.copper_coin};
+  background-color: ${({ theme, isClicked }) =>
+    isClicked ? theme.color.primary : theme.color.copper_coin};
   color: ${({ theme }) => theme.color.white};
   font-size: 1em;
   padding: 0.25em 1em;
-  border: 2px solid ${({ theme }) => theme.color.copper_coin};
+  border: 2px solid ${({ theme }) => theme.color.white};
   border-radius: 3px;
 
   &:hover {
@@ -21,15 +26,18 @@ const Button = styled.button`
 `;
 
 interface IEpisodeBtnProps {
+  id: number;
   url: string;
   handleFetchEpisode: any;
+  selectedId: number;
 }
 
-const EpisodeBtn: React.FC<IEpisodeBtnProps> = ({ url, handleFetchEpisode }) => {
+const EpisodeBtn: React.FC<IEpisodeBtnProps> = ({ id, url, handleFetchEpisode, selectedId }) => {
   return (
-    <Button onClick={() => handleFetchEpisode(parseInt(url.slice(40)))}>{`episode ${url.slice(
-      40,
-    )}`}</Button>
+    <Button
+      isClicked={selectedId === id}
+      onClick={() => handleFetchEpisode(parseInt(url.slice(40)), id)}
+    >{`episode ${url.slice(40)}`}</Button>
   );
 };
 

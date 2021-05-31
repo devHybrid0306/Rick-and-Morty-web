@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Header } from '../../components';
-
 const MainLayoutWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -14,16 +12,7 @@ interface IMainLayout {
   children: JSX.Element;
 }
 const MainLayout: React.FC<IMainLayout> = ({ children }) => {
-  const handleMenu = (isMenuValue: boolean) => {
-    console.log('->MainLayout.IsMenu', isMenuValue);
-  };
-
-  return (
-    <MainLayoutWrapper>
-      <Header handleMenu={handleMenu} />
-      {children}
-    </MainLayoutWrapper>
-  );
+  return <MainLayoutWrapper>{children}</MainLayoutWrapper>;
 };
 
 export default MainLayout;

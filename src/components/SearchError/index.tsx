@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+
 import noResultImg from '../../assets/images/no_results_img.png';
 
 const NoResultWrapper = styled.div`

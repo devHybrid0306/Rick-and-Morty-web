@@ -5,3 +5,4 @@ export { default as InfoText } from './InfoText';
 export { default as SearchError } from './SearchError';
 export { default as CharacterList } from './CharacterList';
 export { default as EpisodeBtn } from './EpisodeBtn';
+export { default as ScrollButton } from './ScrollButton';

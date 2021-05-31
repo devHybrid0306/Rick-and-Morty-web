@@ -4,19 +4,27 @@ import ReactPaginate from 'react-paginate';
 import useMedia from 'use-media';
 import styled from 'styled-components';
 
-import { CharacterList, Filter } from '../../components';
+import { MainLayout } from '../../layout';
+import { CharacterList, Filter, Header, ScrollButton } from '../../components';
 import { getCharacterList, setCurrentPageNumber } from '../../store/actions/character.action';
 import { IState } from '../../types/state';
 
-const StyledMainPage = styled.div`
+interface IStyledMainPageProps {
+  isMenuOpened: boolean;
+}
+
+const StyledMainPage = styled.div<IStyledMainPageProps>`
   display: flex;
   flex-direction: row;
 
   .mainpage {
     &__sidebar {
       @media only screen and (max-width: 768px) {
-        display: none;
+        display: ${({ isMenuOpened }) => (!isMenuOpened ? 'block' : 'none')};
+        position: fixed;
         width: 100%;
+        height: 100%;
+        left: 0;
       }
       width: 30%;
       border-right: 2px solid ${({ theme }) => theme.color.primary};
@@ -31,6 +39,7 @@ const StyledMainPage = styled.div`
 
       @media only screen and (max-width: 768px) {
         width: 100%;
+        display: ${({ isMenuOpened }) => (isMenuOpened ? 'block' : 'none')};
       }
 
       &__character-list {
@@ -73,7 +82,7 @@ const StyledMainPage = styled.div`
   }
   .pagination > li > a,
   .pagination > li > span {
-    color: #47ccde;
+    color: ${({ theme }) => theme.color.primary};
   }
   .pagination > li:first-child > a,
   .pagination > li:first-child > span,
@@ -83,11 +92,7 @@ const StyledMainPage = styled.div`
   }
 `;
 
-interface IMainPageProps {
-  isMenu: boolean;
-}
-
-const MainPage: React.FC<IMainPageProps> = ({ isMenu }) => {
+const MainPage = () => {
   const dispatch = useDispatch();
   const isMobile = useMedia({ maxWidth: 768 });
   const characterList = useSelector((state: IState) => state.character.characterList);
@@ -97,9 +102,9 @@ const MainPage: React.FC<IMainPageProps> = ({ isMenu }) => {
   const [nameFilter, setNameFilter] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [genderFilter, setGenderFilter] = useState<string>('all');
+  const [isMenuOpened, setIsMenuOpened] = useState(true);
 
   useEffect(() => {
-    console.log('->MainPage.IsMenu', isMenu);
     dispatch(getCharacterList(currentPage));
   }, []);
 
@@ -128,34 +133,44 @@ const MainPage: React.FC<IMainPageProps> = ({ isMenu }) => {
     dispatch(getCharacterList(selectedPage));
   };
 
+  const handleMenu = (isMenu: boolean) => {
+    setIsMenuOpened(isMenu);
+  };
+
   return (
-    <StyledMainPage>
-      <div className="mainpage__sidebar">
-        <Filter handleFilter={handleFilter} />
-      </div>
-      <div className="mainpage__content">
-        <div className="mainpage__content__character-list">
-          <CharacterList filteredChars={filteredChars} />
-        </div>
-        <div className="mainpage__content__paginate">
-          {pageInfo !== null && (
-            <ReactPaginate
-              initialPage={currentPage - 1}
-              previousLabel={'prev'}
-              nextLabel={'next'}
-              breakLabel={isMobile ? '' : '...'}
-              breakClassName={'break-me'}
-              pageCount={Number(pageInfo.pages)}
-              marginPagesDisplayed={isMobile ? 0 : 2}
-              pageRangeDisplayed={isMobile ? 2 : 5}
-              onPageChange={handlePageClick}
-              containerClassName={'pagination'}
-              activeClassName={'active'}
-            />
-          )}
-        </div>
-      </div>
-    </StyledMainPage>
+    <MainLayout>
+      <>
+        <Header hasBack={false} hasMenu={true} handleMenu={handleMenu} />
+        <StyledMainPage isMenuOpened={isMenuOpened}>
+          <div className="mainpage__sidebar">
+            <Filter handleFilter={handleFilter} />
+          </div>
+          <div className="mainpage__content">
+            <div className="mainpage__content__character-list">
+              <CharacterList filteredChars={filteredChars} />
+            </div>
+            <div className="mainpage__content__paginate">
+              {pageInfo !== null && (
+                <ReactPaginate
+                  initialPage={currentPage - 1}
+                  previousLabel={'prev'}
+                  nextLabel={'next'}
+                  breakLabel={isMobile ? '' : '...'}
+                  breakClassName={'break-me'}
+                  pageCount={Number(pageInfo.pages)}
+                  marginPagesDisplayed={isMobile ? 0 : 2}
+                  pageRangeDisplayed={isMobile ? 2 : 5}
+                  onPageChange={handlePageClick}
+                  containerClassName={'pagination'}
+                  activeClassName={'active'}
+                />
+              )}
+            </div>
+          </div>
+          <ScrollButton />
+        </StyledMainPage>
+      </>
+    </MainLayout>
   );
 };
 
