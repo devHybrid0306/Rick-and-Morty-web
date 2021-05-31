@@ -1,6 +1,8 @@
-# Getting Started with Create React App
+# Rick and Morty characters
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was built by Typescript, React.js, Redux and Styled-components.
+
+It consists of two pages: Main Page to show character list and filter, Character Detail page.
 
 ## Available Scripts
 
